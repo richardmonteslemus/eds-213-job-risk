@@ -1,11 +1,6 @@
 
-DROP TABLE IF EXISTS meds_jobs_tasks;
-DROP TABLE IF EXISTS meds_jobs;
-DROP TABLE IF EXISTS task_penetration;
-
 -- =============================================
 -- Table 1: task_penetration
--- (create first — referenced by meds_jobs_tasks)
 -- =============================================
 CREATE TABLE task_penetration (
     task        VARCHAR PRIMARY KEY,
@@ -13,15 +8,6 @@ CREATE TABLE task_penetration (
 );
 INSERT INTO task_penetration
 SELECT * FROM read_csv('data/task_penetration.csv', header=true, quote='"');
-
-
---CREATE TABLE task_penetration (
-    --task        VARCHAR UNIQUE,
-    --penetration DOUBLE
---);
---INSERT INTO task_penetration
---SELECT DISTINCT ON (task) task, penetration
---FROM read_csv('data/task_penetration.csv', header=true, quote='"');
 
 -- =============================================
 -- Table 2: meds_jobs
@@ -56,7 +42,7 @@ SELECT * FROM read_csv('data/meds_jobs.csv', header=true, quote='"', nullstr='NA
 
 -- =============================================
 -- Table 3: meds_jobs_tasks
--- (junction table linking jobs <-> tasks)
+--crosswalk
 -- =============================================
 CREATE TABLE meds_jobs_tasks (
     job_title VARCHAR,
