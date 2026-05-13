@@ -1,0 +1,66 @@
+---
+title: "eds213-job-risk-cleaning"
+format: html
+---
+
+```{r}
+# Load in necessary packages
+library(dbplyr)
+library(here)
+library(tidyverse)
+library(janitor)
+library(stringr)
+```
+
+
+```{r}
+# Read in csv files 
+meds_jobs_fall <- read_csv('data/Job-Posts-Copy-Fall.csv') %>% 
+  clean_names()
+
+meds_jobs_winter <- read_csv('data/Job-Posts-Copy-Winter.csv') %>% 
+  clean_names()
+
+meds_jobs_tasks <- read_csv('data/meds_jobs_tasks.csv')
+
+task_penetration <- read_csv('data/task_penetration.csv')
+```
+
+```{r}
+# Coerce min salary column to numeric
+meds_jobs_winter$yearly_salary_min <- as.numeric(str_trim(meds_jobs_winter$yearly_salary_min))
+
+# Coerce max salary column to numeric
+meds_jobs_winter$yearly_salary_max <- as.numeric(str_trim(meds_jobs_winter$yearly_salary_max))
+```
+
+```{r}
+# Concatinate dataframes
+meds_jobs_combined <- bind_rows(meds_jobs_fall, meds_jobs_winter) 
+```
+
+```{r}
+# Fix csv typo
+meds_jobs_clean <- meds_jobs_combined %>% 
+  mutate(position_type = str_replace(position_type, "reseacher", "researcher"))
+```
+
+```{r}
+# Ensure unique rows per csv file 
+meds_jobs_clean <- meds_jobs_clean %>%  
+  distinct()
+
+meds_jobs_tasks_clean <- meds_jobs_tasks %>%  
+  distinct()
+
+task_penetration_clean <- task_penetration %>%  
+  distinct()
+
+# write back out
+write_csv(meds_jobs_clean, 'data/meds_jobs.csv')
+write_csv(meds_jobs_tasks_clean, 'data/meds_jobs_tasks.csv')
+write_csv(task_penetration_clean, 'data/task_penetration.csv')
+```
+
+
+

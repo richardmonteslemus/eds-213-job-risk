@@ -1,0 +1,97 @@
+---
+title: "eds213-job-risk"
+format: html
+---
+
+```{r, message=FALSE}
+library(tidyverse)
+library(DBI)
+library(duckdb)
+library(dplyr)
+```
+
+```{r}
+# AI Pentration Score by Sector 
+conn <- DBI::dbConnect(duckdb::duckdb(), dbdir = "job_risk.duckdb", read_only = TRUE)
+
+sector_risk <- dbGetQuery(conn, "
+  SELECT meds_jobs.sector,
+         ROUND(AVG(task_penetration.penetration), 3) AS avg_ai_penetration,
+         COUNT(*) AS num_tasks
+  FROM meds_jobs_tasks
+  JOIN task_penetration
+    USING (task)
+  JOIN meds_jobs
+    USING (job_title)
+  GROUP BY meds_jobs.sector
+  ORDER BY avg_ai_penetration DESC;
+")
+
+DBI::dbDisconnect(conn, shutdown = TRUE)
+```
+
+```{r}
+sector_risk |>
+  arrange(avg_ai_penetration) |>
+  mutate(sector = factor(sector, levels = sector)) |>
+  ggplot(aes(x = sector, y = avg_ai_penetration)) +
+  geom_segment(aes(xend = sector, yend = 0), linewidth = 1.3, color = "darkblue") +
+  geom_point(size = 6, color = "darkblue") +
+  coord_flip() +
+  labs(
+    x = NULL,
+    y = "Average AI Task Penetration Score",
+    title = "Which Sectors Are Most At Risk For AI Automation?",
+    subtitle = "Ranked by average AI task penetration score across MEDS job postings"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    plot.subtitle = element_text(size = 12, color = "gray40"),
+    axis.text.y = element_text(size = 11)
+  )
+```
+
+```{r}
+conn <- DBI::dbConnect(duckdb::duckdb(), dbdir = "job_risk.duckdb", read_only = TRUE)
+
+position_risk <- dbGetQuery(conn, "
+  SELECT meds_jobs.position_type,
+         ROUND(AVG(task_penetration.penetration), 3) AS avg_ai_penetration,
+         COUNT(*) AS num_tasks
+  FROM meds_jobs_tasks
+  JOIN task_penetration
+    USING (task)
+  JOIN meds_jobs
+    USING (job_title)
+  GROUP BY meds_jobs.position_type
+  ORDER BY avg_ai_penetration DESC
+  LIMIT 10;
+")
+DBI::dbDisconnect(conn, shutdown = TRUE)
+```
+
+```{r}
+position_risk |>
+  filter(!is.na(position_type)) |>
+  mutate(position_type = str_to_title(position_type)) |>
+  arrange(avg_ai_penetration) |>
+  mutate(position_type = factor(position_type, levels = position_type)) |>
+  ggplot(aes(x = position_type, y = avg_ai_penetration)) +
+  geom_segment(aes(xend = position_type, yend = 0), linewidth = 1.3, color = "darkgreen") +
+  geom_point(size = 6, color = "darkgreen") +
+  coord_flip() +
+  labs(
+    x = NULL,
+    y = "Average AI Task Penetration Score",
+    title = "Which Position Types Are Most At Risk For AI Automation?",
+    subtitle = "Ranked by average AI task penetration score across MEDS job postings"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    plot.subtitle = element_text(size = 12, color = "gray40"),
+    axis.text.y = element_text(size = 11)
+  )
+```
+
