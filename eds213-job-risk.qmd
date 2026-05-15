@@ -14,18 +14,18 @@ library(dplyr)
 # AI Pentration Score by Sector 
 conn <- DBI::dbConnect(duckdb::duckdb(), dbdir = "job_risk.duckdb", read_only = TRUE)
 
-sector_risk <- dbGetQuery(conn, "
-  SELECT meds_jobs.sector,
-         ROUND(AVG(task_penetration.penetration), 3) AS avg_ai_penetration,
-         COUNT(*) AS num_tasks
-  FROM meds_jobs_tasks
-  JOIN task_penetration
-    USING (task)
-  JOIN meds_jobs
-    USING (job_title)
-  GROUP BY meds_jobs.sector
-  ORDER BY avg_ai_penetration DESC;
-")
+sector_risk <- dbGetQuery(conn, 
+"SELECT sector,
+       ROUND(AVG(task_penetration.penetration), 3) AS avg_ai_penetration,
+       COUNT(*) AS num_tasks
+FROM meds_jobs_tasks
+JOIN task_penetration
+  USING (task)
+JOIN meds_jobs
+  USING (job_title)
+GROUP BY sector
+ORDER BY avg_ai_penetration DESC;"
+)
 
 DBI::dbDisconnect(conn, shutdown = TRUE)
 ```
@@ -41,7 +41,7 @@ sector_risk |>
   labs(
     x = NULL,
     y = "Average AI Task Penetration Score",
-    title = "Which Sectors Are Most At Risk For AI Automation?",
+    title = "Which Sectors Are Most Exposed To AI?",
     subtitle = "Ranked by average AI task penetration score across MEDS job postings"
   ) +
   theme_minimal() +
@@ -56,7 +56,7 @@ sector_risk |>
 conn <- DBI::dbConnect(duckdb::duckdb(), dbdir = "job_risk.duckdb", read_only = TRUE)
 
 position_risk <- dbGetQuery(conn, "
-  SELECT meds_jobs.position_type,
+  SELECT position_type,
          ROUND(AVG(task_penetration.penetration), 3) AS avg_ai_penetration,
          COUNT(*) AS num_tasks
   FROM meds_jobs_tasks
@@ -64,7 +64,7 @@ position_risk <- dbGetQuery(conn, "
     USING (task)
   JOIN meds_jobs
     USING (job_title)
-  GROUP BY meds_jobs.position_type
+  GROUP BY position_type
   ORDER BY avg_ai_penetration DESC
   LIMIT 10;
 ")
@@ -84,7 +84,7 @@ position_risk |>
   labs(
     x = NULL,
     y = "Average AI Task Penetration Score",
-    title = "Which Position Types Are Most At Risk For AI Automation?",
+    title = "Which Position Types Are Most Exposed To AI?",
     subtitle = "Ranked by average AI task penetration score across MEDS job postings"
   ) +
   theme_minimal() +
