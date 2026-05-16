@@ -1,7 +1,5 @@
 
--- =============================================
--- Table 1: task_penetration
--- =============================================
+-- Table 1: Create task_penetration table
 CREATE TABLE task_penetration (
     task        VARCHAR PRIMARY KEY,
     penetration DOUBLE
@@ -9,9 +7,7 @@ CREATE TABLE task_penetration (
 INSERT INTO task_penetration
 SELECT * FROM read_csv('data/task_penetration.csv', header=true, quote='"');
 
--- =============================================
--- Table 2: meds_jobs
--- =============================================
+-- Table 2: Create meds_jobs table
 CREATE TABLE meds_jobs (
     date_posted           VARCHAR,
     application_deadline  VARCHAR,
@@ -40,10 +36,8 @@ CREATE TABLE meds_jobs (
 INSERT INTO meds_jobs
 SELECT * FROM read_csv('data/meds_jobs.csv', header=true, quote='"', nullstr='NA');
 
--- =============================================
--- Table 3: meds_jobs_tasks
---crosswalk
--- =============================================
+-- Table 3: Create meds_jobs_tasks crosswalk
+
 CREATE TABLE meds_jobs_tasks (
     job_title VARCHAR,
     task      VARCHAR,
@@ -53,9 +47,7 @@ CREATE TABLE meds_jobs_tasks (
 INSERT INTO meds_jobs_tasks
 SELECT * FROM read_csv('data/meds_jobs_tasks.csv', header=true, quote='"');
 
--- =============================================
--- Verify
--- =============================================
+-- Verify table contents
 .tables
 SELECT * FROM task_penetration LIMIT 5;
 SELECT * FROM meds_jobs LIMIT 5;

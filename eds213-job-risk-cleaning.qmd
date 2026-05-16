@@ -35,18 +35,18 @@ meds_jobs_winter$yearly_salary_max <- as.numeric(str_trim(meds_jobs_winter$yearl
 ```
 
 ```{r}
-# Concatinate dataframes
+# Concatinate job dataframes
 meds_jobs_combined <- bind_rows(meds_jobs_fall, meds_jobs_winter) 
 ```
 
 ```{r}
-# Fix csv typo
+# Fix job posting csv typo
 meds_jobs_clean <- meds_jobs_combined %>% 
   mutate(position_type = str_replace(position_type, "reseacher", "researcher"))
 ```
 
 ```{r}
-# Ensure unique rows per csv file 
+# Ensure unique rows per csv file to allow primary key designation 
 meds_jobs_clean <- meds_jobs_clean %>%  
   distinct()
 
@@ -56,7 +56,7 @@ meds_jobs_tasks_clean <- meds_jobs_tasks %>%
 task_penetration_clean <- task_penetration %>%  
   distinct()
 
-# write back out
+# write back out to a csv
 write_csv(meds_jobs_clean, 'data/meds_jobs.csv')
 write_csv(meds_jobs_tasks_clean, 'data/meds_jobs_tasks.csv')
 write_csv(task_penetration_clean, 'data/task_penetration.csv')

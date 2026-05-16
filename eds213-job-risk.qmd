@@ -10,30 +10,93 @@ library(duckdb)
 library(dplyr)
 ```
 
+### What is the AI Automation Risk Across MEDS Job Postings Position Types? 
+We will use the AI Penetration score average for all tasks associated with each position type. This score measures the degree to which Claude could complete a task. 
+
 ```{r}
-# AI Pentration Score by Sector 
-conn <- DBI::dbConnect(duckdb::duckdb(), dbdir = "job_risk.duckdb", read_only = TRUE)
+# Connect to job risk databse
+conn <- DBI::dbConnect(duckdb::duckdb(), dbdir = "job_risk.duckdb")
 
-sector_risk <- dbGetQuery(conn, 
-"SELECT sector,
-       ROUND(AVG(task_penetration.penetration), 3) AS avg_ai_penetration,
-       COUNT(*) AS num_tasks
-FROM meds_jobs_tasks
-JOIN task_penetration
-  USING (task)
-JOIN meds_jobs
-  USING (job_title)
-GROUP BY sector
-ORDER BY avg_ai_penetration DESC;"
-)
-
-DBI::dbDisconnect(conn, shutdown = TRUE)
+# Create lazy Reference to database tables
+# Tables do not exist yet, but can be accessed using SQL
+meds_jobs_db      <- tbl(conn, "meds_jobs")
+meds_jobs_tasks_db <- tbl(conn, "meds_jobs_tasks")
+task_penetration_db <- tbl(conn, "task_penetration")
 ```
 
 ```{r}
-sector_risk |>
-  arrange(avg_ai_penetration) |>
-  mutate(sector = factor(sector, levels = sector)) |>
+# AI Penetration Score by Position Type
+position_risk <- meds_jobs_tasks_db %>% 
+  inner_join(task_penetration_db, by = "task") %>% # Use inner join to keep all ways for both tables
+  inner_join(meds_jobs_db, by = "job_title") %>% # Join on job titles since they are distinct
+  group_by(position_type) %>% 
+  summarise(
+    avg_ai_penetration = round(mean(penetration, na.rm = TRUE), 3),
+    num_tasks = n()
+  ) %>% 
+  arrange(desc(avg_ai_penetration)) %>% 
+  head(10) %>% 
+  collect()
+
+position_risk
+```
+
+### Visualize AI Risk for Position Types
+
+```{r}
+position_risk %>% 
+  filter(!is.na(position_type)) %>% # Remove NA to easy plotting
+  mutate(position_type = str_to_title(position_type)) %>% # Turn position type column to title to make letters official
+  arrange(avg_ai_penetration) %>% 
+  mutate(position_type = factor(position_type, levels = position_type)) %>% # Factor position type based on AI penetration score
+  ggplot(aes(x = position_type, y = avg_ai_penetration)) +
+  geom_segment(aes(xend = position_type, yend = 0), linewidth = 1.3, color = "darkgreen") +
+  geom_point(size = 6, color = "darkgreen") +
+  coord_flip() +
+  labs(
+    x = NULL,
+    y = "Average AI Task Penetration Score",
+    title = "Which Position Types Are Most Exposed To AI?",
+    subtitle = "Ranked by average AI task penetration score across MEDS job postings"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    plot.subtitle = element_text(size = 12, color = "gray40"),
+    axis.text.y = element_text(size = 11)
+  )
+```
+
+### What is the AI Automation Risk Across MEDS Job Postings Sectors? 
+We will use the AI Penetration score average for all tasks associated with each sector. This score measures the degree to which Claude could complete a task. 
+
+```{r}
+# AI Penetration Score by Sector
+sector_risk <- meds_jobs_tasks_db %>% 
+  inner_join(task_penetration_db, by = "task") %>% # Use inner join to keep all ways for both tables
+  inner_join(meds_jobs_db, by = "job_title") %>%  # Join on job titles since they are distinct
+  group_by(sector) %>% 
+  summarise(
+    avg_ai_penetration = round(mean(penetration, na.rm = TRUE), 3),
+    num_tasks = n()
+  ) %>% 
+  arrange(desc(avg_ai_penetration)) %>% 
+  collect()
+
+sector_risk
+```
+
+```{r}
+# Disconnect from database to avoid permission issues in future
+DBI::dbDisconnect(conn, shutdown = TRUE)
+```
+
+### Visualize AI Risk for Sector
+
+```{r}
+sector_risk %>% 
+  arrange(avg_ai_penetration) %>% 
+  mutate(sector = factor(sector, levels = sector)) %>% # Set order through levels by factoring
   ggplot(aes(x = sector, y = avg_ai_penetration)) +
   geom_segment(aes(xend = sector, yend = 0), linewidth = 1.3, color = "darkblue") +
   geom_point(size = 6, color = "darkblue") +
@@ -52,46 +115,4 @@ sector_risk |>
   )
 ```
 
-```{r}
-conn <- DBI::dbConnect(duckdb::duckdb(), dbdir = "job_risk.duckdb", read_only = TRUE)
-
-position_risk <- dbGetQuery(conn, "
-  SELECT position_type,
-         ROUND(AVG(task_penetration.penetration), 3) AS avg_ai_penetration,
-         COUNT(*) AS num_tasks
-  FROM meds_jobs_tasks
-  JOIN task_penetration
-    USING (task)
-  JOIN meds_jobs
-    USING (job_title)
-  GROUP BY position_type
-  ORDER BY avg_ai_penetration DESC
-  LIMIT 10;
-")
-DBI::dbDisconnect(conn, shutdown = TRUE)
-```
-
-```{r}
-position_risk |>
-  filter(!is.na(position_type)) |>
-  mutate(position_type = str_to_title(position_type)) |>
-  arrange(avg_ai_penetration) |>
-  mutate(position_type = factor(position_type, levels = position_type)) |>
-  ggplot(aes(x = position_type, y = avg_ai_penetration)) +
-  geom_segment(aes(xend = position_type, yend = 0), linewidth = 1.3, color = "darkgreen") +
-  geom_point(size = 6, color = "darkgreen") +
-  coord_flip() +
-  labs(
-    x = NULL,
-    y = "Average AI Task Penetration Score",
-    title = "Which Position Types Are Most Exposed To AI?",
-    subtitle = "Ranked by average AI task penetration score across MEDS job postings"
-  ) +
-  theme_minimal() +
-  theme(
-    plot.title = element_text(size = 16, face = "bold"),
-    plot.subtitle = element_text(size = 12, color = "gray40"),
-    axis.text.y = element_text(size = 11)
-  )
-```
 
