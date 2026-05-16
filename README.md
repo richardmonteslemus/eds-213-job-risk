@@ -34,10 +34,10 @@ This project uses AI task penetration scores from the Anthropic Economic Index, 
 - Cleaned and combined MEDS job postings from Fall and Winter quarters, including employer, sector, position type, location, compensation, and required skills.
 
 **Access:**
-Compiled by the Bren School career team intern [Sofia Sarak](https://github.com/sofiasarak) . Raw files are `Job-Posts-Copy-Fall.csv` and `Job-Posts-Copy-Winter.csv`.
+Compiled by the Bren School career team intern [Sofia Sarak](https://github.com/sofiasarak). Raw files are `Job-Posts-Copy-Fall.csv` and `Job-Posts-Copy-Winter.csv`.
 
 **task_penetration.csv**
-- AI penetration scores for occupational tasks, measuring the degree to which Claude could complete each task. Scores range from 0 (no automation potential) to 1 (fully automatable).
+- AI penetration scores for occupational tasks, measuring the degree to which Claude could complete each task. Scores range from 0 to 1.
 
 **Access:**
 [Anthropic Economic Index](https://huggingface.co/datasets/Anthropic/EconomicIndex)
@@ -58,7 +58,7 @@ Synthetic crosswalk produced by Claude
 
 **Files:**
 
-Quarto notebook for cleaning raw job and task penetration data and prepare it for an SQL insertion. 
+Quarto notebook for cleaning raw job and task penetration data and preparing it for an SQL insertion. 
 - `eds213-job-risk-cleaning.qmd`
 
 SQL script for creating the three DuckDB tables needed for this project
@@ -72,7 +72,7 @@ Quarto notebook containing database connection, `dbplyr` queries, and lollipop c
 
 **Required Tools:**
 - R: `tidyverse`, `DBI`, `duckdb`, `dbplyr`, `dplyr`
-- See `requirements.txt` for full session info including package versions
+- See `requirements.txt` for full session info, including package versions
 
 Acknowledgement:
-The code and content for this analysis were developed as part of EDS 213 – Databases and Data Management in the Bren School of Environmental Science and Management Master of Environmental Data Science Program. This course is led by Julien Brun and Greg Janée.
+The code and content for this analysis were developed as part of EDS 213 – Databases and Data Management in the Bren School of Environmental Science and Management Master of Environmental Data Science Program. This course is led by Julien Brun and Greg Janée and co-led by Annie Adams.
