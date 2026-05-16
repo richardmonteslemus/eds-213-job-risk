@@ -16,15 +16,15 @@ This project uses AI task penetration scores from the Anthropic Economic Index, 
 │   ├── Job-Posts-Copy-Fall.csv  # Raw MEDS job postings from Fall quarter
 │   ├── Job-Posts-Copy-Winter.csv# Raw MEDS job postings from Winter quarter
 │   ├── meds_jobs.csv            # Cleaned and combined job postings
-│   ├── meds_jobs_tasks.csv      # Junction table linking job titles to occupational tasks
+│   ├── meds_jobs_tasks.csv      # Cross table linking job titles tasks
 │   └── task_penetration.csv     # AI penetration scores per task
-├── eds213-job-risk-cleaning.qmd # Data cleaning script (combines and cleans raw postings)
-├── eds213-job-risk-query.sql    # Analytical SQL queries
+├── eds213-job-risk-cleaning.qmd # Data cleaning script 
+├── eds213-job-risk-query.sql    # SQL queries
 ├── eds213-job-risk.qmd          # Main analysis: database queries and visualizations
-├── final-tables.sql             # SQL for creating and populating DuckDB tables
+├── final-tables.sql             # SQL for creating DuckDB tables
 ├── job_risk.duckdb              # DuckDB database built from the CSV files above
 ├── LICENSE
-├── requirements.txt             # R session info for reproducibility
+├── requirements.txt             # R session dependencies for reproducibility
 └── README.md
 ```
 
