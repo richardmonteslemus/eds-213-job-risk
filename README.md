@@ -5,15 +5,9 @@
 # About
 
 ### Purpose:
-As AI tools become increasingly capable, questions about which jobs and tasks are most exposed to automation have become central to career planning in data-intensive fields. This project investigates the degree to which AI could automate tasks associated with job postings targeted at MEDS (Master of Environmental Data Science) graduates.
+As AI tools continue to evolve in seemingly all industries, questions about which jobs and tasks are most exposed to automation have become important for future career planning and projections. This project investigates the degree to which AI could automate tasks associated with job postings targeted at MEDS (Master of Environmental Data Science) graduates.
 
-Using AI task penetration scores from the Anthropic Economic Index — a dataset measuring the degree to which Claude could complete occupational tasks — MEDS job postings are linked to their associated tasks and scored for AI exposure. Results are aggregated and visualized by **sector** and **position type** to identify which career paths face the greatest automation risk.
-
-### Highlights:
-- Building a DuckDB relational database from CSV files with primary and foreign key constraints
-- Querying across multiple tables using SQL joins and aggregate functions
-- Translating SQL queries into `dbplyr` syntax using lazy evaluation and `collect()`
-- Visualizing average AI task penetration scores by sector and position type using lollipop charts
+This project uses AI task penetration scores from the Anthropic Economic Index, a dataset measuring the degree to which Claude could complete certain occupational tasks. MEDS job postings are linked to their associated tasks and scored for their average AI exposure. The average is visualized by **sector** and **position type** to identify which career paths face the greatest automation risk.
 
 ### File Structure
 
@@ -83,4 +77,4 @@ Quarto notebook containing database connection, `dbplyr` queries, and lollipop c
 - See `requirements.txt` for full session info including package versions
 
 Acknowledgement:
-The code and content for this analysis were developed as part of EDS 213 – Databases and Data Management in the Bren School of Environmental Science and Management Master of Environmental Data Science Program. This course is led by Julien Brunt Greg Janée.
+The code and content for this analysis were developed as part of EDS 213 – Databases and Data Management in the Bren School of Environmental Science and Management Master of Environmental Data Science Program. This course is led by Julien Brun Greg Janée.
