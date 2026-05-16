@@ -52,7 +52,7 @@ Synthetic crosswalk produced by Claude
 
 [1] R. Appel et al., "Anthropic Economic Index," Anthropic, Mar. 2026. [Online]. Available: https://huggingface.co/datasets/Anthropic/EconomicIndex
 
-[2] Sofia Sarak, UC Santa Barbara. *MEDS Job Postings — Fall and Winter 2025–2026* [internal dataset], 2026.
+[2] Sofia Sarak, UC Santa Barbara. *MEDS Job Postings — Fall and Winter 2025–2026*, 2026.
 
 ## Outputs
 
