@@ -34,39 +34,37 @@ This project uses AI task penetration scores from the Anthropic Economic Index, 
 - Cleaned and combined MEDS job postings from Fall and Winter quarters, including employer, sector, position type, location, compensation, and required skills.
 
 **Access:**
-Compiled by the Bren School career team. Raw files are `Job-Posts-Copy-Fall.csv` and `Job-Posts-Copy-Winter.csv`.
-
-**meds_jobs_tasks.csv**
-- Junction table linking each MEDS job title to its associated occupational tasks. Tasks are drawn from BLS occupational data and matched to job titles.
-
-**Access:**
-Derived from BLS occupational task data and matched to MEDS job postings.
+Compiled by the Bren School career team intern [Sofia Sara](https://github.com/sofiasarak). Raw files are `Job-Posts-Copy-Fall.csv` and `Job-Posts-Copy-Winter.csv`.
 
 **task_penetration.csv**
 - AI penetration scores for occupational tasks, measuring the degree to which Claude could complete each task. Scores range from 0 (no automation potential) to 1 (fully automatable).
 
 **Access:**
-[Anthropic Economic Index](https://www.anthropic.com/economic-index)
+[Anthropic Economic Index](https://huggingface.co/datasets/Anthropic/EconomicIndex)
+
+**meds_jobs_tasks.csv**
+- Cross table linking each MEDS job title to its associated tasks. Tasks are drawn from `task_penetration.csv` data and matched to job titles using Claude.
+
+**Access:**
+Synthetic crosswalk produced by Claude
 
 ### References:
 
-[1] Anthropic. *The Anthropic Economic Index* [dataset], 2025. Available: https://www.anthropic.com/economic-index. [Accessed May 2025].
+[1] R. Appel et al., "Anthropic Economic Index," Anthropic, Mar. 2026. [Online]. Available: https://huggingface.co/datasets/Anthropic/EconomicIndex
 
-[2] U.S. Bureau of Labor Statistics. *Occupational Information Network (O\*NET) Task Data* [dataset]. Available: https://www.onetonline.org. [Accessed May 2025].
-
-[3] Bren School Career Team, UC Santa Barbara. *MEDS Job Postings — Fall and Winter 2024–2025* [internal dataset], 2025.
+[2] Sofia Sarak, UC Santa Barbara. *MEDS Job Postings — Fall and Winter 2025–2026* [internal dataset], 2026.
 
 ## Outputs
 
 **Files:**
 
-Quarto notebook for cleaning and combining raw job posting CSVs into a single analysis-ready file
+Quarto notebook for cleaning raw job and task penetration data and prepare it for an SQL insertion. 
 - `eds213-job-risk-cleaning.qmd`
 
-SQL script for creating and populating the three DuckDB tables
+SQL script for creating the three DuckDB tables needed for this project
 - `final-tables.sql`
 
-SQL script containing the analytical queries for AI penetration by sector and position type
+SQL script containing the queries for AI penetration by sector and position type
 - `eds213-job-risk-query.sql`
 
 Quarto notebook containing database connection, `dbplyr` queries, and lollipop chart visualizations of AI penetration scores by sector and position type
@@ -77,4 +75,4 @@ Quarto notebook containing database connection, `dbplyr` queries, and lollipop c
 - See `requirements.txt` for full session info including package versions
 
 Acknowledgement:
-The code and content for this analysis were developed as part of EDS 213 – Databases and Data Management in the Bren School of Environmental Science and Management Master of Environmental Data Science Program. This course is led by Julien Brun Greg Janée.
+The code and content for this analysis were developed as part of EDS 213 – Databases and Data Management in the Bren School of Environmental Science and Management Master of Environmental Data Science Program. This course is led by Julien Brun and Greg Janée.
