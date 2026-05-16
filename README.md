@@ -83,4 +83,4 @@ Quarto notebook containing database connection, `dbplyr` queries, and lollipop c
 - See `requirements.txt` for full session info including package versions
 
 Acknowledgement:
-The code and content for this analysis were developed as part of EDS 213 – Databases and Data Management in the Bren School of Environmental Science and Management Master of Environmental Data Science Program. This course is led by Kelly Dodge and co-led by Greg Janée.
+The code and content for this analysis were developed as part of EDS 213 – Databases and Data Management in the Bren School of Environmental Science and Management Master of Environmental Data Science Program. This course is led by Julien Brunt Greg Janée.
