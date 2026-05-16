@@ -34,7 +34,7 @@ This project uses AI task penetration scores from the Anthropic Economic Index, 
 - Cleaned and combined MEDS job postings from Fall and Winter quarters, including employer, sector, position type, location, compensation, and required skills.
 
 **Access:**
-Compiled by the Bren School career team intern [Sofia Sara](https://github.com/sofiasarak). Raw files are `Job-Posts-Copy-Fall.csv` and `Job-Posts-Copy-Winter.csv`.
+Compiled by the Bren School career team intern [Sofia Sarak](https://github.com/sofiasarak) . Raw files are `Job-Posts-Copy-Fall.csv` and `Job-Posts-Copy-Winter.csv`.
 
 **task_penetration.csv**
 - AI penetration scores for occupational tasks, measuring the degree to which Claude could complete each task. Scores range from 0 (no automation potential) to 1 (fully automatable).
