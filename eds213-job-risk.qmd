@@ -27,7 +27,7 @@ task_penetration_db <- tbl(conn, "task_penetration")
 ```{r}
 # AI Penetration Score by Position Type
 position_risk <- meds_jobs_tasks_db %>% 
-  inner_join(task_penetration_db, by = "task") %>% # Use inner join to keep all ways for both tables
+  inner_join(task_penetration_db, by = "task") %>% # Use inner join to keep all rows for both tables
   inner_join(meds_jobs_db, by = "job_title") %>% # Join on job titles since they are distinct
   group_by(position_type) %>% 
   summarise(
